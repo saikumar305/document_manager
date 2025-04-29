@@ -1,16 +1,18 @@
 from fastapi import FastAPI
 import uvicorn
-from app.db.postgres import async_session, engine
+from app.db.postgres import engine
 from app.db.base import Base
-from app.db import models # Import your models here
+from app.db import models  # Import your models here
+
+from app.api.auth import router as auth_router
 
 app = FastAPI()
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 
 @app.on_event("startup")
-async def startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+def startup():
+    Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")
