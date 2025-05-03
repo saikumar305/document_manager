@@ -16,3 +16,13 @@ class DocumentOut(BaseModel):
         json_encoders = {
             datetime: lambda v: v.isoformat() if isinstance(v, datetime) else None
         }
+
+
+class QA(BaseModel):
+    question: str
+    answer: Optional[str]
+    document_id: str
+
+    class Config:
+        orm_mode = True
+       

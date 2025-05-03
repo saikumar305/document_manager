@@ -28,12 +28,12 @@ class Document(Base):
     owner = relationship("User", back_populates="documents")
 
 
-class DocumentEmbedding(Base):
-    __tablename__ = "document_embeddings"
+# class DocumentEmbedding(Base):
+#     __tablename__ = "document_embeddings"
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    document_id = Column(
-        String, ForeignKey("documents.id", ondelete="CASCADE"), nullable=False
-    )
-    embedding = Column(Vector(768))
-    created_at = Column(DateTime, default=datetime.utcnow)
+#     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+#     document_id = Column(
+#         String, ForeignKey("documents.id", ondelete="CASCADE"), nullable=False
+#     )
+#     embedding = Column(Vector(768))
+#     created_at = Column(DateTime, default=datetime.utcnow)
