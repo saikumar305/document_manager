@@ -8,7 +8,7 @@ class Settings:
     POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "password")
     POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
-    POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5433")
+    POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
     POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
 
     SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
@@ -21,3 +21,5 @@ class Settings:
 
 
 settings = Settings()
+
+print("Settings loaded:" , settings.__dict__)

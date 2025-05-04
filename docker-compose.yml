@@ -1,0 +1,58 @@
+
+services:
+  db:
+    image: ankane/pgvector
+    container_name: postgres_pgvector
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: fastapi_backend
+    restart: always
+    depends_on:
+      - db
+      - ollama
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/postgres
+      OLLAMA_BASE_URL: http://localhost:11434
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command:
+      [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "-c", "/entrypoint.sh"]
+  
+volumes:
+  pgdata:
+  ollama:
