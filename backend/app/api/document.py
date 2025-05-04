@@ -70,7 +70,7 @@ def upload_document(
     nodes = embedder.create_text_nodes(text_chunks, docs, doc_idxs)
     nodes = embedder.embed_text_nodes(nodes)
     for node in nodes:
-        node.metadata["document_id"] = new_doc.id
+        node.metadata["doc_id"] = new_doc.id
         node.metadata["file_name"] = file.filename
         node.metadata["file_type"] = file.content_type
         node.metadata["file_size"] = file.size
