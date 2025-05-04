@@ -18,6 +18,8 @@ class Settings:
 
     OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
     CHROMA_HOST = os.getenv("CHROMA_HOST", "chromadb")
+    LLM_MODEL = os.getenv("LLM_MODEL", "llama3:8b")
+    EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-embed-text:v1.5")
 
 
 settings = Settings()

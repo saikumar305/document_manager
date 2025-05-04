@@ -3,7 +3,7 @@ from llama_index.embeddings.ollama import OllamaEmbedding
 
 from llama_index.core.schema import NodeWithScore
 from llama_index.vector_stores.postgres import PGVectorStore
-from llama_index.core.vector_stores import VectorStoreQuery
+from llama_index.core.vector_stores import VectorStoreQuery, MetadataFilters
 from llama_index.core import Document
 
 
@@ -24,13 +24,14 @@ class VectorDBRetriever(BaseRetriever):
         embed_model: OllamaEmbedding,
         query_mode: str = "default",
         similarity_top_k: int = 2,
+        filters: Optional[MetadataFilters] = None,
     ) -> None:
         """Init params."""
         self._vector_store = vector_store
         self._embed_model = embed_model
         self._query_mode = query_mode
         self._similarity_top_k = similarity_top_k
-        self._filters = None
+        self._filters = filters
         super().__init__()
 
     def _retrieve(self, query_bundle: QueryBundle) -> List[NodeWithScore]:

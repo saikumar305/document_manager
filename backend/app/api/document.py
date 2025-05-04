@@ -34,6 +34,17 @@ def upload_document(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid file type. Only PDF files are allowed.",
         )
+    
+    is_file_present = db.query(Document).filter(
+        Document.file_name == file.filename,
+        Document.owner_id == current_user.id,
+    ).first()
+
+    # if is_file_present:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST,
+    #         detail="File with the same name already exists.",
+    #     )
 
     # save the file to a temporary location
     file_location = f"files/{file.filename}"
@@ -49,6 +60,7 @@ def upload_document(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Could not extract text from the provided PDF file.",
         )
+    
     new_doc = Document(
         id=str(uuid.uuid4()),
         title=title,
@@ -71,16 +83,17 @@ def upload_document(
     text_chunks, doc_idxs = embedder.text_splitter(docs)
     nodes = embedder.create_text_nodes(text_chunks, docs, doc_idxs)
     nodes = embedder.embed_text_nodes(nodes)
+
+    print(new_doc.__dict__)
+
     for node in nodes:
-        node.metadata["doc_id"] = new_doc.id
+        node.metadata["document_id"] = new_doc.id
         node.metadata["file_name"] = file.filename
         node.metadata["file_type"] = file.content_type
         node.metadata["file_size"] = file.size
         node.metadata["title"] = title
         node.metadata["owner_id"] = current_user.id
         node.metadata["source"] = file_location
-
-    print(nodes)
 
     vector_store.add(nodes)
     return new_doc

@@ -3,12 +3,15 @@ from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.readers.file import PyMuPDFReader
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.schema import TextNode
+from app.core.config import settings
 
 
 class Embedder:
     def __init__(self, model_name: str = "nomic-embed-text:v1.5"):
         self.model_name = model_name
-        self.embed_model = OllamaEmbedding(model_name=model_name)
+        self.embed_model = OllamaEmbedding(
+            model_name=model_name, base_url=settings.OLLAMA_URL
+        )
 
     def load_documents(cls, file_path: str) -> List[dict]:
         """
@@ -45,6 +48,7 @@ class Embedder:
         for idx, chunk in enumerate(text_chunks):
             node = TextNode(text=chunk)
             node.metadata = documents[doc_idxs[idx]].metadata
+            print(f"Node metadata: {node.metadata}")
             nodes.append(node)
         return nodes
 
@@ -57,6 +61,7 @@ class Embedder:
                 node.get_content(metadata_mode="all")
             )
             node.embedding = embedding
+            node.text = node.text.replace("\x00", "") if node.text else node.text
         return nodes
 
     def embed_query(self, query: str) -> List[float]:
