@@ -4,7 +4,7 @@ from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.core.schema import NodeWithScore
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.vector_stores import VectorStoreQuery, MetadataFilters
-from llama_index.core import Document
+
 
 
 from typing import List, Optional
@@ -23,7 +23,7 @@ class VectorDBRetriever(BaseRetriever):
         vector_store: PGVectorStore,
         embed_model: OllamaEmbedding,
         query_mode: str = "default",
-        similarity_top_k: int = 2,
+        similarity_top_k: int = 5,
         filters: Optional[MetadataFilters] = None,
     ) -> None:
         """Init params."""
@@ -51,7 +51,6 @@ class VectorDBRetriever(BaseRetriever):
             score: Optional[float] = None
             if query_result.similarities is not None:
                 score = query_result.similarities[index]
-                print(f"Score: {score}")
             nodes_with_scores.append(NodeWithScore(node=node, score=score))
 
         return nodes_with_scores
@@ -61,7 +60,7 @@ from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.retrievers import VectorIndexRetriever
-from llama_index.core import get_response_synthesizer
+
 
 from llama_index.core.llms import LLM
 

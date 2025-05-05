@@ -12,7 +12,7 @@ until curl -s http://localhost:11434; do
 done
 
 # Pull the models
-curl -X POST http://localhost:11434/api/pull -d '{"name": "llama3:8b"}'
+curl -X POST http://localhost:11434/api/pull -d '{"name": "llama3.1:8b"}'
 curl -X POST http://localhost:11434/api/pull -d '{"name": "nomic-embed-text:v1.5"}'
 
 # Keep foreground process to hold container open

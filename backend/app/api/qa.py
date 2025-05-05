@@ -102,6 +102,12 @@ def ask_question(
     return QAResponse(
         answer=answer,
         question=question,
-        source_documents=nodes,
+        source_documents=[
+            {
+                "text": node.get_content(metadata_mode="all"),
+                "metadata": node.metadata,
+            }
+            for node in nodes
+        ],
         document_id=document_id,
     )
