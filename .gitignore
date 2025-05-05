@@ -52,3 +52,4 @@ Desktop.ini
 
 # Docker volumes mapped outside
 volumes/
+backend/files
