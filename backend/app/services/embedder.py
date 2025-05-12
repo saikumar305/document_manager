@@ -39,16 +39,20 @@ class Embedder:
         return split_docs, doc_ids
 
     def create_text_nodes(
-        self, text_chunks: List[str], documents: List[dict], doc_idxs: List[int]
+        self,
+        text_chunks: List[str],
+        documents: List[dict],
+        doc_idxs: List[int],
+        shared_metadata=None,
     ) -> List[TextNode]:
         """
         Create TextNode objects from text chunks and attach metadata from source documents.
         """
         nodes = []
         for idx, chunk in enumerate(text_chunks):
-            node = TextNode(text=chunk)
-            node.metadata = documents[doc_idxs[idx]].metadata
-            print(f"Node metadata: {node.metadata}")
+            metadata = shared_metadata.copy() if shared_metadata else {}
+            metadata["chunk_index"] = idx
+            node = TextNode(text=chunk, metadata=metadata)
             nodes.append(node)
         return nodes
 
@@ -58,7 +62,7 @@ class Embedder:
         """
         for node in nodes:
             embedding = self.embed_model.get_text_embedding(
-                node.get_content(metadata_mode="all")
+                node.get_content()
             )
             node.embedding = embedding
             node.text = node.text.replace("\x00", "") if node.text else node.text

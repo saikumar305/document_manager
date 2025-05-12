@@ -18,11 +18,4 @@ class DocumentOut(BaseModel):
         }
 
 
-class QA(BaseModel):
-    question: str
-    answer: Optional[str]
-    document_id: str
 
-    class Config:
-        orm_mode = True
-       

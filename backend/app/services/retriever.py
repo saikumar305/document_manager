@@ -1,18 +1,19 @@
-from llama_index.core import VectorStoreIndex
 from llama_index.embeddings.ollama import OllamaEmbedding
 
 from llama_index.core.schema import NodeWithScore
 from llama_index.vector_stores.postgres import PGVectorStore
 from llama_index.core.vector_stores import VectorStoreQuery, MetadataFilters
-
-
-
-from typing import List, Optional
-
-
-from llama_index.core import QueryBundle
+from llama_index.core import (
+    QueryBundle,
+    get_response_synthesizer,
+    VectorStoreIndex,
+    StorageContext,
+)
 from llama_index.core.retrievers import BaseRetriever
-from typing import Any, List
+from typing import Any, List, Optional
+
+from llama_index.core.query_engine import RetrieverQueryEngine
+from llama_index.core.llms import LLM
 
 
 class VectorDBRetriever(BaseRetriever):
@@ -45,6 +46,7 @@ class VectorDBRetriever(BaseRetriever):
             filters=self._filters,
         )
         query_result = self._vector_store.query(vector_store_query)
+        print(query_result)
 
         nodes_with_scores = []
         for index, node in enumerate(query_result.nodes):
@@ -54,15 +56,6 @@ class VectorDBRetriever(BaseRetriever):
             nodes_with_scores.append(NodeWithScore(node=node, score=score))
 
         return nodes_with_scores
-
-
-from llama_index.vector_stores.postgres import PGVectorStore
-from llama_index.core import VectorStoreIndex, StorageContext
-from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.core.retrievers import VectorIndexRetriever
-
-
-from llama_index.core.llms import LLM
 
 
 class Retriever:
